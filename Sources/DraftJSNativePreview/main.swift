@@ -3,22 +3,6 @@ import DraftJSNative
 import Foundation
 import SwiftUI
 
-private struct ArticleFixture: Decodable {
-    let title: String
-    let content_state: DraftDocument
-    let cover_media: ArticleMedia?
-    let media_entities: [ArticleMedia]?
-}
-
-private struct ArticleMedia: Decodable {
-    let media_id: String
-    let media_info: MediaInfo
-}
-
-private struct MediaInfo: Decodable {
-    let original_img_url: String?
-}
-
 private final class PreviewAppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         true
@@ -27,14 +11,11 @@ private final class PreviewAppDelegate: NSObject, NSApplicationDelegate {
 
 let input = CommandLine.arguments.count == 2
     ? URL(fileURLWithPath: CommandLine.arguments[1])
-    : Bundle.main.url(forResource: "sample-article", withExtension: "json")!
+    : Bundle.main.url(forResource: "sample-article-envelope", withExtension: "json")!
 private let inputData = try Data(contentsOf: input)
-private let fixture = try? JSONDecoder().decode(ArticleFixture.self, from: inputData)
-private let document = try fixture?.content_state ?? DraftDocument(jsonData: inputData)
-private let title = fixture?.title ?? "Draft.js bilingual sample"
-private let mediaURLs = Dictionary(uniqueKeysWithValues: (fixture?.media_entities ?? []).compactMap { media in
-    media.media_info.original_img_url.flatMap(URL.init(string:)).map { (media.media_id, $0) }
-})
+private let article = try? DraftArticlePayload(jsonData: inputData)
+private let document = try article?.document ?? DraftDocument(jsonData: inputData)
+private let title = article?.title ?? "Draft.js bilingual sample"
 let app = NSApplication.shared
 private let appDelegate = PreviewAppDelegate()
 app.delegate = appDelegate
@@ -44,8 +25,8 @@ let content = ScrollView {
     DraftArticleView(
         title: title,
         document: document,
-        coverURL: fixture?.cover_media?.media_info.original_img_url.flatMap(URL.init(string:)),
-        mediaURLForID: { mediaURLs[$0] }
+        coverURL: article?.coverMedia?.imageURL,
+        mediaURLForID: { article?.imageURL(forMediaID: $0) }
     )
         .frame(maxWidth: .infinity)
 }

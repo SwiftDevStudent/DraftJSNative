@@ -12,7 +12,7 @@ BIN_PATH="$(swift build --disable-sandbox --scratch-path "$SCRATCH_PATH" --show-
 
 mkdir -p "$APP_ROOT/Contents/MacOS" "$APP_ROOT/Contents/Resources"
 cp -f "$BIN_PATH/draftjs-native-preview" "$APP_ROOT/Contents/MacOS/"
-cp -X -f "$PACKAGE_ROOT/Examples/sample-article.json" "$APP_ROOT/Contents/Resources/"
+cp -X -f "$PACKAGE_ROOT/Examples/sample-article-envelope.json" "$APP_ROOT/Contents/Resources/"
 cat > "$APP_ROOT/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

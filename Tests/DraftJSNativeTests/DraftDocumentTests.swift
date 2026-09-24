@@ -96,6 +96,18 @@ final class DraftDocumentTests: XCTestCase {
         XCTAssertTrue(result.warnings.isEmpty)
     }
 
+    func testConsecutiveListItemsStayInOneMarkdownList() throws {
+        let document = try parse(#"""
+        {"blocks":[
+          {"key":"a","type":"unordered-list-item","text":"First"},
+          {"key":"b","type":"unordered-list-item","text":"Child","depth":1},
+          {"key":"c","type":"unordered-list-item","text":"Second"},
+          {"key":"d","type":"unstyled","text":"After"}
+        ],"entityMap":{}}
+        """#)
+        XCTAssertEqual(document.markdown().text, "- First\n  - Child\n- Second\n\nAfter")
+    }
+
     func testXArticleCamelCaseArrayContentState() throws {
         let document = try parse(#"""
         {"blocks":[

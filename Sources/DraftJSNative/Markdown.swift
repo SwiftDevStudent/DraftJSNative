@@ -10,12 +10,14 @@ extension DraftDocument {
     /// Converts supported blocks to Markdown. Media URLs are often stored outside `content_state`.
     public func markdown(mediaURLForID: (String) -> URL? = { _ in nil }) -> MarkdownConversion {
         var lines: [String] = []
+        var listItems: [Bool] = []
         var warnings: [String] = []
         var orderedCounters: [Int: Int] = [:]
 
         for block in blocks {
             if block.type == "atomic" {
                 lines.append(renderAtomic(block, mediaURLForID: mediaURLForID, warnings: &warnings))
+                listItems.append(false)
                 continue
             }
 
@@ -94,12 +96,20 @@ extension DraftDocument {
                 warnings.append("Unsupported block type \(block.type) in block \(block.key)")
                 lines.append(content)
             }
+            listItems.append(block.type == "ordered-list-item" || block.type == "unordered-list-item")
             if block.type != "ordered-list-item" {
                 orderedCounters.removeAll()
             }
         }
 
-        return MarkdownConversion(text: lines.joined(separator: "\n\n"), warnings: warnings)
+        var output = ""
+        for index in lines.indices {
+            if index > 0 {
+                output += listItems[index - 1] && listItems[index] ? "\n" : "\n\n"
+            }
+            output += lines[index]
+        }
+        return MarkdownConversion(text: output, warnings: warnings)
     }
 
     private func renderAtomic(
@@ -125,13 +135,25 @@ extension DraftDocument {
                 }
             }
         case "MEDIA":
-            let items = entity.data["media_items"] ?? entity.data["mediaItems"]
-            if case .array(let values) = items,
-               case .object(let item)? = values.first,
-               let id = item["media_id"]?.stringValue ?? item["mediaId"]?.stringValue {
-                if let url = mediaURLForID(id) { return "![Media](<\(url.absoluteString)>)" }
-                warnings.append("Media \(id) needs a URL from article metadata")
-                return "[Media: \(escapeMarkdown(id))]"
+            let items = entity.mediaItems
+            if !items.isEmpty {
+                let content = items.enumerated().map { index, item in
+                    let category = item.category?.lowercased() ?? ""
+                    let isPlayable = category.contains("video") || category.contains("gif")
+                    if isPlayable {
+                        warnings.append("Media \(item.mediaID) needs native \(category) playback")
+                    }
+                    guard let url = mediaURLForID(item.mediaID) else {
+                        warnings.append("Media \(item.mediaID) needs a URL from article metadata")
+                        return "[Media: \(escapeMarkdown(item.mediaID))]"
+                    }
+                    let label = isPlayable ? "Media poster" : items.count == 1 ? "Media" : "Media \(index + 1)"
+                    return "![\(label)](<\(url.absoluteString)>)"
+                }.joined(separator: "\n")
+                if let caption = entity.data["caption"]?.stringValue, !caption.isEmpty {
+                    return "\(content)\n\n*\(escapeMarkdown(caption))*"
+                }
+                return content
             }
         default: break
         }

@@ -234,7 +234,7 @@ private enum StringOrInt: Decodable {
 }
 
 /// Keeps app-specific entity and block metadata available to native consumers.
-public enum JSONValue: Decodable, Equatable {
+public enum JSONValue: Codable, Equatable {
     case string(String), number(Decimal), bool(Bool), object([String: JSONValue])
     case array([JSONValue]), null
 
@@ -250,5 +250,17 @@ public enum JSONValue: Decodable, Equatable {
         else if let value = try? container.decode(Decimal.self) { self = .number(value) }
         else if let value = try? container.decode([JSONValue].self) { self = .array(value) }
         else { self = .object(try container.decode([String: JSONValue].self)) }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .string(let value): try container.encode(value)
+        case .number(let value): try container.encode(value)
+        case .bool(let value): try container.encode(value)
+        case .object(let value): try container.encode(value)
+        case .array(let value): try container.encode(value)
+        case .null: try container.encodeNil()
+        }
     }
 }

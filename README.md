@@ -12,9 +12,11 @@ Requirements: Swift 6, macOS 13 or iOS 16 for the library. The preview app runs 
 git clone https://github.com/SwiftDevStudent/DraftJSNative.git
 cd DraftJSNative
 swift run draftjs-native Examples/sample-article.json
+swift run draftjs-native Examples/sample-article-envelope.json
+swift run draftjs-native --check-roundtrip Examples/sample-article-envelope.json
 ```
 
-The synthetic sample mixes Hebrew, English, flags, skin tones, and multi-person emoji sequences to exercise UTF-16 ranges. The command prints Markdown. Supply a raw Draft.js `content_state` JSON file to convert your own article. An X Article URL or webpage HTML is not that JSON.
+The synthetic samples mix Hebrew, English, flags, skin tones, and multi-person emoji sequences to exercise UTF-16 ranges. The second file is an Article envelope with a title, media metadata, and a longer body. The command prints Markdown and reports features that need a host component. Supply a raw Draft.js `content_state` or Article-result JSON file to convert your own article. An X Article URL or webpage HTML is not that JSON.
 
 To open the native macOS sample window:
 
@@ -23,7 +25,7 @@ Scripts/package_preview.sh
 open /private/tmp/DraftJSNativePreview.app
 ```
 
-The script uses the active Xcode toolchain unless `DEVELOPER_DIR` is set. It accepts `DRAFTJS_PREVIEW_APP_PATH` and `SWIFT_SCRATCH_PATH` to change its output paths. You can pass an Article envelope JSON path to the preview executable to supply a title, cover, and media URLs.
+The preview opens the synthetic Article envelope by default. The script uses the active Xcode toolchain unless `DEVELOPER_DIR` is set. It accepts `DRAFTJS_PREVIEW_APP_PATH` and `SWIFT_SCRATCH_PATH` to change its output paths. You can pass another Article envelope JSON path to the preview executable.
 
 ## Add the package
 
@@ -33,41 +35,50 @@ In Xcode, add `https://github.com/SwiftDevStudent/DraftJSNative.git` as a Swift 
 .package(url: "https://github.com/SwiftDevStudent/DraftJSNative.git", from: "0.1.0")
 ```
 
-Parse and convert:
-
-```swift
-import DraftJSNative
-
-let document = try DraftDocument(jsonData: articleContentStateJSON)
-for block in document.blocks {
-    for run in document.runs(in: block) {
-        // Render run.text using run.styles and run.entity.
-    }
-}
-
-let result = document.markdown { mediaID in
-    articleMediaURLs[mediaID] // URL? supplied by your app
-}
-print(result.text)
-print(result.warnings)
-```
-
-Display the document in SwiftUI:
+Decode an Article result and display it:
 
 ```swift
 import DraftJSNative
 import SwiftUI
 
-DraftArticleView(title: articleTitle, document: document) { mediaID in
-    articleMediaURLs[mediaID]
+let article = try DraftArticlePayload(jsonData: articleResultJSON)
+let view = DraftArticleView(
+    title: article.title,
+    document: article.document,
+    coverURL: article.coverMedia?.imageURL,
+    mediaURLForID: { article.imageURL(forMediaID: $0) }
+)
+
+let requirements = article.document.defaultRendererWarnings { mediaID in
+    article.imageURL(forMediaID: mediaID)
 }
+print(requirements)
 ```
 
-`DraftArticleView` handles paragraphs, headings, quotes, lists, code panels, inline styles, links, dividers, and images when the host supplies URLs. System text layout supports mixed Hebrew, English, and emoji. The host owns article loading, navigation, authentication, and interactions. For atomic content that needs a host component, pass `atomicViewForEntity` and return an `AnyView` for an entity you handle.
+The input is the Article result containing `title`, `content_state`, and optional `cover_media` and `media_entities`. A host app extracts that result from its own authorized network response. For raw Draft.js data, use `DraftDocument(jsonData:)` directly. Convert either document to Markdown with `document.markdown(mediaURLForID:)`. If the host can resolve a video or GIF stream, pass `playbackURLForID` to `DraftArticleView` for native AVKit playback.
+
+To use the host app's existing post, video, GIF, or math components, provide `atomicViewForEntity`:
+
+```swift
+DraftArticleView(
+    title: article.title,
+    document: article.document,
+    coverURL: article.coverMedia?.imageURL,
+    mediaURLForID: { article.imageURL(forMediaID: $0) },
+    atomicViewForEntity: { entity in
+        // Return an AnyView from the host's native renderer, or nil for the built-in view.
+        nil
+    }
+)
+```
+
+`DraftArticleView` handles paragraphs, headings, quotes, lists, code panels, simple Markdown tables, inline styles, links, dividers, captions, and image galleries when the host supplies URLs. System text layout supports mixed Hebrew, English, and emoji. The host owns Article loading, navigation, authentication, and interactions. See [ENGINEER_HANDOFF.md](ENGINEER_HANDOFF.md) for integration and verification steps.
+
+For a semantic JSON round trip that retains unknown Article fields, decode with `DraftArticleArchive(jsonData:)` and call `jsonData()`. This may change whitespace and object key order. It does not implement editing.
 
 ## Current limits
 
-This is a `0.1.0` prototype, **not a one-to-one or drop-in replacement** for X's Article renderer. Embedded posts use a link fallback. Video, GIFs, galleries, LaTeX, Markdown tables, and X's surrounding Article UI need additional native rendering and host data. The package is read-only; it does not implement editing or publishing. X's Article response shape is not a stable public contract for this package. See [PARITY.md](PARITY.md) for feature coverage and acceptance gates.
+This remains a prototype, **not a one-to-one or drop-in replacement** for X's Article renderer. Embedded posts use a link fallback. Video and GIF items play when the host supplies stream URLs; otherwise they show posters. LaTeX and other unknown atomic types need host renderers. The built-in table renderer covers simple pipe tables, not every Markdown table variant. The package is read-only; it does not implement editing or publishing. X's Article response shape is not a stable public contract for this package. See [PARITY.md](PARITY.md) for feature coverage and acceptance gates.
 
 Article payloads captured during development are kept outside this repository. The public sample and tests use synthetic data. If a client renders `MARKDOWN` entity content as HTML, apply its normal untrusted-content sanitization.
 

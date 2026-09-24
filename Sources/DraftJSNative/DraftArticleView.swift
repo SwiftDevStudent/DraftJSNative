@@ -7,6 +7,7 @@ public struct DraftArticleView: View {
     public let document: DraftDocument
     public let coverURL: URL?
     public let mediaURLForID: (String) -> URL?
+    public let playbackURLForID: (String) -> URL?
     public let atomicViewForEntity: (DraftEntity) -> AnyView?
 
     public init(
@@ -14,12 +15,14 @@ public struct DraftArticleView: View {
         document: DraftDocument,
         coverURL: URL? = nil,
         mediaURLForID: @escaping (String) -> URL? = { _ in nil },
+        playbackURLForID: @escaping (String) -> URL? = { _ in nil },
         atomicViewForEntity: @escaping (DraftEntity) -> AnyView? = { _ in nil }
     ) {
         self.title = title
         self.document = document
         self.coverURL = coverURL
         self.mediaURLForID = mediaURLForID
+        self.playbackURLForID = playbackURLForID
         self.atomicViewForEntity = atomicViewForEntity
     }
 
@@ -47,6 +50,7 @@ public struct DraftArticleView: View {
                     block: document.blocks[index],
                     orderedNumber: orderedNumber(at: index),
                     mediaURLForID: mediaURLForID,
+                    playbackURLForID: playbackURLForID,
                     atomicViewForEntity: atomicViewForEntity
                 )
                 .padding(.bottom, 24)
@@ -73,6 +77,7 @@ private struct DraftArticleBlockView: View {
     let block: DraftBlock
     let orderedNumber: Int
     let mediaURLForID: (String) -> URL?
+    let playbackURLForID: (String) -> URL?
     let atomicViewForEntity: (DraftEntity) -> AnyView?
 
     var body: some View {
@@ -82,10 +87,11 @@ private struct DraftArticleBlockView: View {
                 richText
                     .font(.system(size: headingSize, weight: .bold))
             case "blockquote":
-                HStack(alignment: .top, spacing: 16) {
-                    Rectangle().fill(.secondary).frame(width: 3)
-                    richText
-                }
+                richText
+                    .padding(.leading, 19)
+                    .overlay(alignment: .leading) {
+                        Rectangle().fill(.secondary).frame(width: 3)
+                    }
             case "unordered-list-item", "ordered-list-item":
                 HStack(alignment: .firstTextBaseline, spacing: 12) {
                     Text(block.type == "unordered-list-item" ? "•" : "\(orderedNumber).")
@@ -109,10 +115,11 @@ private struct DraftArticleBlockView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var richText: Text {
+    private var richText: some View {
         document.runs(in: block).reduce(Text("")) { result, run in
             result + styledText(for: run)
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private func styledText(for run: DraftRun) -> Text {
@@ -158,23 +165,17 @@ private struct DraftArticleBlockView: View {
         switch entity.type.uppercased() {
             case "DIVIDER": Divider()
             case "MEDIA":
-                VStack(alignment: .leading, spacing: 8) {
-                    if let id = mediaID(in: entity), let url = mediaURLForID(id) {
-                        AsyncImage(url: url) { image in
-                            image.resizable().scaledToFit()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                    } else {
-                        Text("[Media unavailable]").foregroundStyle(.secondary)
-                    }
-                    if let caption = entity.data["caption"]?.stringValue, !caption.isEmpty {
-                        Text(caption).font(.system(size: 14)).foregroundStyle(.secondary)
-                    }
-                }
+                DraftMediaGalleryView(
+                    items: entity.mediaItems,
+                    caption: entity.data["caption"]?.stringValue,
+                    mediaURLForID: mediaURLForID,
+                    playbackURLForID: playbackURLForID
+                )
             case "MARKDOWN":
                 if let source = entity.data["markdown"]?.stringValue {
-                    if let code = fencedCode(in: source) {
+                    if let table = DraftMarkdownTable(markdown: source) {
+                        DraftMarkdownTableView(table: table)
+                    } else if let code = fencedCode(in: source) {
                         ScrollView(.horizontal) {
                             Text(code)
                                 .font(.system(size: 15, design: .monospaced))
@@ -198,13 +199,6 @@ private struct DraftArticleBlockView: View {
             default:
                 Text("[Unsupported \(entity.type) content]").foregroundStyle(.secondary)
         }
-    }
-
-    private func mediaID(in entity: DraftEntity) -> String? {
-        let items = entity.data["media_items"] ?? entity.data["mediaItems"]
-        guard case .array(let values) = items,
-              case .object(let first)? = values.first else { return nil }
-        return first["media_id"]?.stringValue ?? first["mediaId"]?.stringValue
     }
 
     private func fencedCode(in source: String) -> String? {

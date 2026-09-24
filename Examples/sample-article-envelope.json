@@ -1,0 +1,392 @@
+{
+  "title": "Across Scripts: Reading an Article Natively 🌍",
+  "content_state": {
+    "blocks": [
+      {
+        "key": "opening",
+        "type": "unstyled",
+        "text": "A sentence can carry more than one writing system. In the same line, שלום עולם meets hello world. Emoji add gestures, places, and people: 👋🏽 🧑🏽‍💻 🇮🇱 👨‍👩‍👧‍👦. Together they make a page feel lived in, not translated.",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "body",
+        "type": "unstyled",
+        "text": "שלום 👋🏽 עולם! Swift קורא עברית 😀🚀🇮🇱🧑🏽‍💻 וגם English 😊",
+        "inlineStyleRanges": [
+          {
+            "offset": 0,
+            "length": 14,
+            "style": "Bold"
+          },
+          {
+            "offset": 27,
+            "length": 21,
+            "style": "Italic"
+          }
+        ],
+        "entityRanges": [
+          {
+            "offset": 16,
+            "length": 5,
+            "key": 0
+          }
+        ],
+        "depth": 0,
+        "data": {}
+      },
+      {
+        "key": "parade",
+        "type": "unstyled",
+        "text": "Emoji parade: 😀 😃 😄 🤖 🧠 🥹 👨‍👩‍👧‍👦 🏳️‍🌈 | עברית: בוקר טוב 🌞",
+        "inlineStyleRanges": [
+          {
+            "offset": 32,
+            "length": 18,
+            "style": "Bold"
+          }
+        ],
+        "entityRanges": [
+          {
+            "offset": 60,
+            "length": 8,
+            "key": 1
+          }
+        ],
+        "depth": 0,
+        "data": {}
+      },
+      {
+        "key": "quote",
+        "type": "blockquote",
+        "text": "Hello עולם — קפה ☕️ וספרים 📚",
+        "inlineStyleRanges": [],
+        "entityRanges": [],
+        "depth": 0,
+        "data": {}
+      },
+      {
+        "key": "list-one",
+        "type": "unordered-list-item",
+        "text": "First 😀 — ראשון 🥇",
+        "inlineStyleRanges": [],
+        "entityRanges": [],
+        "depth": 0,
+        "data": {}
+      },
+      {
+        "key": "list-two",
+        "type": "unordered-list-item",
+        "text": "Second 🚀 — שני 🥈",
+        "inlineStyleRanges": [],
+        "entityRanges": [],
+        "depth": 0,
+        "data": {}
+      },
+      {
+        "key": "section",
+        "type": "header-two",
+        "text": "What a reader needs",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "context",
+        "type": "unstyled",
+        "text": "The reader should see the meaning and structure of an Article: paragraphs, links, lists, media, code, and embedded posts. A parser that keeps the words but loses their relationships has not finished the job. ✍️📚🔗",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "ordered-one",
+        "type": "ordered-list-item",
+        "text": "Preserve the source order and formatting ranges. 🔢",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "ordered-two",
+        "type": "ordered-list-item",
+        "text": "Render each attachment and its caption. 🖼️",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "ordered-three",
+        "type": "ordered-list-item",
+        "text": "Make unsupported content visible to the host app. 🔍",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "gallery-heading",
+        "type": "header-two",
+        "text": "Pictures tell part of the story",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "gallery",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 4
+          }
+        ]
+      },
+      {
+        "key": "gallery-note",
+        "type": "unstyled",
+        "text": "Two images can change the rhythm of a long article. Their caption gives them context, and the surrounding text can keep moving without losing that detail.",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      },
+      {
+        "key": "table",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 2
+          }
+        ]
+      },
+      {
+        "key": "code",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 6
+          }
+        ]
+      },
+      {
+        "key": "post",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 5
+          }
+        ]
+      },
+      {
+        "key": "video",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 7
+          }
+        ]
+      },
+      {
+        "key": "latex",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 8
+          }
+        ]
+      },
+      {
+        "key": "divider",
+        "type": "atomic",
+        "text": " ",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": [
+          {
+            "offset": 0,
+            "length": 1,
+            "key": 3
+          }
+        ]
+      },
+      {
+        "key": "ending",
+        "type": "unstyled",
+        "text": "A native Article should feel calm to read in English, בעברית, or both together. Words, pictures, code, and conversation can share one page without asking the reader to think about the machinery beneath it. 🌍✅",
+        "depth": 0,
+        "data": {},
+        "inlineStyleRanges": [],
+        "entityRanges": []
+      }
+    ],
+    "entityMap": [
+      {
+        "key": 0,
+        "value": {
+          "type": "LINK",
+          "mutability": "Mutable",
+          "data": {
+            "url": "https://swift.org/"
+          }
+        }
+      },
+      {
+        "key": 1,
+        "value": {
+          "type": "LINK",
+          "mutability": "Mutable",
+          "data": {
+            "url": "https://example.com/hebrew"
+          }
+        }
+      },
+      {
+        "key": 2,
+        "value": {
+          "type": "MARKDOWN",
+          "mutability": "Mutable",
+          "data": {
+            "markdown": "\n| Language | Text |\n|---|---|\n| עברית | שלום 👋🏽 |\n| English | Hello 🌍 |\n"
+          }
+        }
+      },
+      {
+        "key": 3,
+        "value": {
+          "type": "DIVIDER",
+          "mutability": "Immutable",
+          "data": {}
+        }
+      },
+      {
+        "key": 4,
+        "value": {
+          "type": "MEDIA",
+          "mutability": "Immutable",
+          "data": {
+            "caption": "Two views of the same story — שתי תמונות 📷",
+            "mediaItems": [
+              {
+                "mediaId": "demo-a",
+                "mediaCategory": "tweet_image"
+              },
+              {
+                "mediaId": "demo-b",
+                "mediaCategory": "tweet_image"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": 5,
+        "value": {
+          "type": "TWEET",
+          "mutability": "Immutable",
+          "data": {
+            "post_id": "1234567890123456789"
+          }
+        }
+      },
+      {
+        "key": 6,
+        "value": {
+          "type": "MARKDOWN",
+          "mutability": "Mutable",
+          "data": {
+            "markdown": "\n```swift\nlet greeting = \"שלום 👋🏽, Swift!\"\nprint(greeting)\n```\n"
+          }
+        }
+      },
+      {
+        "key": 7,
+        "value": {
+          "type": "MEDIA",
+          "mutability": "Immutable",
+          "data": {
+            "mediaItems": [
+              {
+                "mediaId": "demo-video",
+                "mediaCategory": "tweet_video"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": 8,
+        "value": {
+          "type": "LATEX",
+          "mutability": "Immutable",
+          "data": {
+            "latex": "\\frac{1}{2}"
+          }
+        }
+      }
+    ]
+  },
+  "media_entities": [
+    {
+      "media_id": "demo-a",
+      "media_info": {
+        "original_img_url": "https://example.com/a.png"
+      }
+    },
+    {
+      "media_id": "demo-b",
+      "media_info": {
+        "original_img_url": "https://example.com/b.png"
+      }
+    },
+    {
+      "media_id": "demo-video",
+      "media_info": {
+        "original_img_url": "https://example.com/video-poster.png"
+      }
+    }
+  ]
+}
