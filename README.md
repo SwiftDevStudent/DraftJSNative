@@ -74,11 +74,11 @@ DraftArticleView(
 
 `DraftArticleView` handles paragraphs, headings, quotes, lists, code panels, simple Markdown tables, inline styles, links, dividers, captions, and image galleries when the host supplies URLs. System text layout supports mixed Hebrew, English, and emoji. The host owns Article loading, navigation, authentication, and interactions. See [ENGINEER_HANDOFF.md](ENGINEER_HANDOFF.md) for integration and verification steps.
 
-For a semantic JSON round trip that retains unknown Article fields, decode with `DraftArticleArchive(jsonData:)` and call `jsonData()`. This may change whitespace and object key order. It does not implement editing.
+For a semantic JSON round trip that retains unknown Article fields, decode with `DraftArticleArchive(jsonData:)` and call `jsonData()`. This may change whitespace and object key order. `replacingTitle(with:)` and `replacingText(inBlock:range:with:styles:)` support a limited edit round trip: text edits use UTF-16 offsets, adjust existing style and entity positions, and reject atomic blocks or edits that intersect entities. Newlines, block splitting, and entity mutability still need editor support.
 
 ## Current limits
 
-This remains a prototype, **not a one-to-one or drop-in replacement** for X's Article renderer. Embedded posts use a link fallback. Video and GIF items play when the host supplies stream URLs; otherwise they show posters. LaTeX and other unknown atomic types need host renderers. The built-in table renderer covers simple pipe tables, not every Markdown table variant. The package is read-only; it does not implement editing or publishing. X's Article response shape is not a stable public contract for this package. See [PARITY.md](PARITY.md) for feature coverage and acceptance gates.
+This remains a prototype, **not a one-to-one or drop-in replacement** for X's Article renderer and editor. Embedded posts use a link fallback. Video and GIF items play when the host supplies stream URLs; otherwise they show posters. LaTeX and other unknown atomic types need host renderers. The built-in table renderer covers simple pipe tables, not every Markdown table variant. The package supports only limited text editing and does not implement a native editor UI, full Draft.js editing semantics, or publishing. X's Article response shape is not a stable public contract for this package. See [PARITY.md](PARITY.md) for feature coverage and acceptance gates.
 
 Article payloads captured during development are kept outside this repository. The public sample and tests use synthetic data. If a client renders `MARKDOWN` entity content as HTML, apply its normal untrusted-content sanitization.
 

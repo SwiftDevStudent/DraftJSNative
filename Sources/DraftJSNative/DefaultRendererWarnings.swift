@@ -13,7 +13,7 @@ extension DraftDocument {
             "header-four", "header-five", "header-six", "blockquote",
             "unordered-list-item", "ordered-list-item", "code-block", "atomic"
         ]
-        let knownStyles: Set<String> = ["BOLD", "ITALIC", "STRIKETHROUGH", "CODE"]
+        let knownStyles: Set<String> = ["BOLD", "ITALIC", "STRIKETHROUGH", "UNDERLINE", "CODE"]
 
         for block in blocks {
             if !knownBlocks.contains(block.type) {

@@ -135,6 +135,7 @@ private struct DraftArticleBlockView: View {
         if styles.contains("BOLD") { text = text.bold() }
         if styles.contains("ITALIC") { text = text.italic() }
         if styles.contains("STRIKETHROUGH") { text = text.strikethrough() }
+        if styles.contains("UNDERLINE") { text = text.underline() }
         if styles.contains("CODE") { text = text.font(.system(size: 16, design: .monospaced)) }
         return text
     }

@@ -25,7 +25,7 @@ Target: native Article reading and editing with feature parity. The current Swif
 | LaTeX and atomic emoji | Entity metadata preserved | Missing | Native renderers and real examples. |
 | Article JSON round trip | Full JSON tree retained | Not applicable | Semantic round trip passes synthetic and two local payloads; edit round trips remain missing. |
 | Article navigation, sharing, reactions, author and audience UI | Outside `content_state` | Missing | Host app integration. |
-| Editing, undo/redo, draft save/publish | Raw content state decoded; unchanged Article JSON can round-trip | Missing | Native editor, edit serialization, media upload, X authorization and save/publish integration. |
+| Editing, undo/redo, draft save/publish | Article JSON and limited block text edits can round-trip | No editor UI | Full Draft.js edit semantics, undo/redo, media upload, X authorization and save/publish integration. |
 
 ## One-to-one acceptance gates
 

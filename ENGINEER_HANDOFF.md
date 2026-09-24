@@ -36,13 +36,13 @@ let view = DraftArticleView(
 
 - Public synthetic fixtures and parser tests cover Draft.js and X field spellings, UTF-16 ranges, mixed direction text, gallery item preservation, Markdown conversion, and malformed data.
 - A locally captured published Article result with 18 blocks and 9 entities decodes through `DraftArticlePayload` and converts without parser errors. That payload stays outside the repository.
-- `DraftArticleArchive` preserves the complete JSON value tree through decode and encode. Semantic round trips pass on the public synthetic Article and two local Article payloads. This does not prove an edit round trip.
+- `DraftArticleArchive` preserves the complete JSON value tree through decode and encode. Semantic round trips pass on the public synthetic Article and two local Article payloads. A synthetic UTF-16 block text edit round trip passes; X's editor behavior has not been compared.
 - The macOS preview displays the local Article's title, cover, text, image, caption, lists, code, and divider. The preview also exposed a paragraph truncation bug, which has been fixed and visually rechecked with the synthetic Article.
 - The library builds for the iOS 16 simulator target. This is compile proof; it is not an iPhone runtime comparison.
 
 ## What blocks full parity
 
-The default view uses a link for an embedded post and a poster for video or GIF media unless the host supplies a playable stream URL. It cannot supply X's post data, playback streams, author controls, or Article actions. LaTeX and uncommon atomic content need a native host renderer. Simple pipe tables and image galleries render, but their exact layout and interaction have not been compared with X on iPhone. The package preserves Article JSON values through serialization, but has no native editor, undo/redo, edit round trip, media upload, or draft save/publish integration.
+The default view uses a link for an embedded post and a poster for video or GIF media unless the host supplies a playable stream URL. It cannot supply X's post data, playback streams, author controls, or Article actions. LaTeX and uncommon atomic content need a native host renderer. Simple pipe tables and image galleries render, but their exact layout and interaction have not been compared with X on iPhone. The package preserves Article JSON values and supports limited block text edits, but has no native editor UI, full entity editing, undo/redo, media upload, or draft save/publish integration.
 
 To finish the replacement, I need redacted `content_state` and companion media metadata for each Article feature, plus the expected iOS output at fixed viewport and text settings. A small host-side adapter for X's existing post and media components would let the package render those entities without copying private implementation into this repository. Editing needs its own contract for content-state serialization and the draft lifecycle.
 

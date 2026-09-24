@@ -21,7 +21,8 @@ extension DraftDocument {
                 continue
             }
 
-            let useInlineHTML = block.inlineStyleRanges.enumerated().contains { index, first in
+            let hasUnderline = block.inlineStyleRanges.contains { $0.style.uppercased() == "UNDERLINE" }
+            let hasOverlappingStyles = block.inlineStyleRanges.enumerated().contains { index, first in
                 block.inlineStyleRanges.dropFirst(index + 1).contains { second in
                     first.length > 0 && second.length > 0
                         && first.offset < second.offset + second.length
@@ -29,13 +30,17 @@ extension DraftDocument {
                         && (first.offset != second.offset || first.length != second.length)
                 }
             }
-            if useInlineHTML {
+            let useInlineHTML = hasUnderline || hasOverlappingStyles
+            if hasOverlappingStyles {
                 warnings.append("Overlapping styles use inline HTML in block \(block.key)")
+            }
+            if hasUnderline {
+                warnings.append("Underline uses inline HTML in block \(block.key)")
             }
 
             let content = runs(in: block).map { run -> String in
                 let styles = run.styles.map { $0.uppercased() }
-                for style in styles where !["BOLD", "ITALIC", "STRIKETHROUGH", "CODE"].contains(style) {
+                for style in styles where !["BOLD", "ITALIC", "STRIKETHROUGH", "UNDERLINE", "CODE"].contains(style) {
                     warnings.append("Unsupported inline style \(style) in block \(block.key)")
                 }
                 var result = useInlineHTML ? escapeHTML(run.text) : escapeMarkdown(run.text)
@@ -44,6 +49,7 @@ extension DraftDocument {
                     if styles.contains("BOLD") { result = "<strong>\(result)</strong>" }
                     if styles.contains("ITALIC") { result = "<em>\(result)</em>" }
                     if styles.contains("STRIKETHROUGH") { result = "<del>\(result)</del>" }
+                    if styles.contains("UNDERLINE") { result = "<u>\(result)</u>" }
                 } else {
                     if styles.contains("CODE") {
                         let ticks = String(repeating: "`", count: longestBacktickRun(in: run.text) + 1)

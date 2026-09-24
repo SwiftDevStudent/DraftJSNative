@@ -150,6 +150,19 @@ final class DraftDocumentTests: XCTestCase {
         XCTAssertEqual(document.markdown().warnings, ["Overlapping styles use inline HTML in block b"])
     }
 
+    func testUnderlineRendersWithoutBeingReportedUnsupported() throws {
+        let document = try parse(#"""
+        {"blocks":[{"key":"underlined","type":"unstyled","text":"שלום 😀",
+          "inlineStyleRanges":[{"offset":0,"length":7,"style":"UNDERLINE"}]}],
+         "entityMap":{}}
+        """#)
+        XCTAssertEqual(document.runs(in: document.blocks[0]).first?.styles, ["UNDERLINE"])
+        XCTAssertEqual(document.markdown().text, "<u>שלום 😀</u>")
+        XCTAssertEqual(document.markdown().warnings,
+                       ["Underline uses inline HTML in block underlined"])
+        XCTAssertTrue(document.defaultRendererWarnings().isEmpty)
+    }
+
     func testInvalidSurrogateBoundaryIsRejected() {
         XCTAssertThrowsError(try parse(#"""
         {"blocks":[{"key":"b","type":"unstyled","text":"😀",
