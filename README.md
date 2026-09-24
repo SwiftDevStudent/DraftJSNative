@@ -29,10 +29,10 @@ The preview opens the synthetic Article envelope by default. The script uses the
 
 ## Add the package
 
-In Xcode, add `https://github.com/SwiftDevStudent/DraftJSNative.git` as a Swift package dependency and link the `DraftJSNative` library product. With a tagged release, SwiftPM can use:
+In Xcode, add `https://github.com/SwiftDevStudent/DraftJSNative.git` as a Swift package dependency and link the `DraftJSNative` library product. The Article APIs below are currently on `main`; use this development branch until a tagged release includes them:
 
 ```swift
-.package(url: "https://github.com/SwiftDevStudent/DraftJSNative.git", from: "0.1.0")
+.package(url: "https://github.com/SwiftDevStudent/DraftJSNative.git", branch: "main")
 ```
 
 Decode an Article result and display it:
