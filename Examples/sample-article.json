@@ -1,0 +1,107 @@
+{
+  "blocks": [
+    {
+      "key": "title",
+      "type": "header-one",
+      "text": "שלום, Swift! 🇮🇱✨",
+      "inline_style_ranges": [],
+      "entity_ranges": []
+    },
+    {
+      "key": "body",
+      "type": "unstyled",
+      "text": "שלום 👋🏽 עולם! Swift קורא עברית 😀🚀🇮🇱🧑🏽‍💻 וגם English 😊",
+      "inline_style_ranges": [
+        { "offset": 0, "length": 14, "style": "Bold" },
+        { "offset": 27, "length": 21, "style": "Italic" }
+      ],
+      "entity_ranges": [
+        { "offset": 16, "length": 5, "key": 0 }
+      ]
+    },
+    {
+      "key": "parade",
+      "type": "unstyled",
+      "text": "Emoji parade: 😀 😃 😄 🤖 🧠 🥹 👨‍👩‍👧‍👦 🏳️‍🌈 | עברית: בוקר טוב 🌞",
+      "inline_style_ranges": [
+        { "offset": 32, "length": 18, "style": "Bold" }
+      ],
+      "entity_ranges": [
+        { "offset": 60, "length": 8, "key": 1 }
+      ]
+    },
+    {
+      "key": "quote",
+      "type": "blockquote",
+      "text": "Hello עולם — קפה ☕️ וספרים 📚",
+      "inline_style_ranges": [],
+      "entity_ranges": []
+    },
+    {
+      "key": "list-one",
+      "type": "unordered-list-item",
+      "text": "First 😀 — ראשון 🥇",
+      "inline_style_ranges": [],
+      "entity_ranges": []
+    },
+    {
+      "key": "list-two",
+      "type": "unordered-list-item",
+      "text": "Second 🚀 — שני 🥈",
+      "inline_style_ranges": [],
+      "entity_ranges": []
+    },
+    {
+      "key": "table",
+      "type": "atomic",
+      "text": " ",
+      "inline_style_ranges": [],
+      "entity_ranges": [
+        { "offset": 0, "length": 1, "key": 2 }
+      ]
+    },
+    {
+      "key": "divider",
+      "type": "atomic",
+      "text": " ",
+      "inline_style_ranges": [],
+      "entity_ranges": [
+        { "offset": 0, "length": 1, "key": 3 }
+      ]
+    }
+  ],
+  "entity_map": [
+    {
+      "key": 0,
+      "value": {
+        "type": "LINK",
+        "mutability": "Mutable",
+        "data": { "url": "https://swift.org/" }
+      }
+    },
+    {
+      "key": 1,
+      "value": {
+        "type": "LINK",
+        "mutability": "Mutable",
+        "data": { "url": "https://example.com/hebrew" }
+      }
+    },
+    {
+      "key": 2,
+      "value": {
+        "type": "MARKDOWN",
+        "mutability": "Mutable",
+        "data": { "markdown": "\n| Language | Text |\n|---|---|\n| עברית | שלום 👋🏽 |\n| English | Hello 🌍 |\n" }
+      }
+    },
+    {
+      "key": 3,
+      "value": {
+        "type": "DIVIDER",
+        "mutability": "Immutable",
+        "data": {}
+      }
+    }
+  ]
+}
